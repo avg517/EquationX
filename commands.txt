@@ -1,0 +1,2 @@
+def varname-create variable with varname
+?-print return value
