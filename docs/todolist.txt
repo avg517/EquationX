@@ -1,0 +1,8 @@
+TODO:add signed numbers in parseExpression (for example 2+-3)
+BUG:fix parse expression failed when quitting in simplecalculator
+TODO:add file support 
+TODO:clean up parser.cpp file 
+TODO:add ui for functions
+TODO:add base functions (for loops,function declaration,keywords,etc...) #work in progress by matei 
+TODO:add function support
+

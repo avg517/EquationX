@@ -1,0 +1,14 @@
+this file:contains what files contain what...
+
+tokens.h:contains the id for every token (addsign, parantheses, etc...)
+
+tokenizer.h:contains the function declarations for tokenizer.c
+
+tokenizer.c:the main lexer of the program
+
+parser.hpp:contains the operator functions, the tokenid's given by the tokenizer(std::deque<int> tokenids) and also the tokens(std::deque<std::string> problems)
+
+parser.cpp:the main parser file for now it contains the Nodes,precedence of operators,definevar(work in progress), checkvariable, peek, advance,parseExpression, freeTree, evaluate, endparsing and runequ functions
+-NOTE:most of these functions will be renamed and changed
+
+simplecalculator.cpp:a small test tool for the parser
