@@ -1,6 +1,6 @@
-#include <ifstream>
+#include <fstream>
 #include <iostream>
-
+//sorry bro i made another one in src/parser.cpp
 //flags:
 //
 
