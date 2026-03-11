@@ -45,7 +45,7 @@ void render_buffer(char** buffer){//the buffer needs to be the size of the windo
     //void getmaxyx(WINDOW *win, int y, int x); //this function gets the maximum size of the terminal
     //also,this variables are initiliazed by ncurses after initializing the screen: COLS, LINES
     for(int x;x<COLS;x++){
-        for(int y;y<COLS;x++){
+        for(int y;y<LINES;x++){
             mvaddch(y,x,buffer[x][y]);
         }
     }
