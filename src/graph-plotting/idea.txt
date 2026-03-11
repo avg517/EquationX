@@ -1,0 +1,4 @@
+make it so when creating the graph instead of identifying what type of equation is, it simply starts evaluating every operation for every x (between 2 values) and puts the results in the matrix,and then it modifies it
+
+
+(for example if we have f(x)=x/2+2 then first it evaluates +2 and adds to every solution in the graph +2,and then evaluates x/2 and puts the result in the graph
