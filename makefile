@@ -1,11 +1,12 @@
 CC ?= gcc
 CXX ?= g++
+CFLAGS ?= -O2
 PREFIX ?= /usr/local
 DESTDIR ?=
 all:
 	mkdir -p build
-	$(CC) -O2 -c src/tokenizer.c -o build/tokenizer.o
-	$(CXX) -O2 src/simplecalculator.cpp build/tokenizer.o -o build/calc
+	$(CC) $(CFLAGS) -c src/tokenizer.c -o build/tokenizer.o
+	$(CXX) $(CFLAGS) src/simplecalculator.cpp build/tokenizer.o -o build/calc
 
 install:
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
