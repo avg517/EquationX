@@ -1,8 +1,31 @@
+//the ifndef is for the libary to not be included twice
+#ifndef INCLUD_PARSEVARS
+#define INCLUD_PARSEVARS
+
+
+#define OPER(name, key) float name(float a,float b){return(float)((a) key (b));}
 #include <unordered_map>
 #include <string>
 #include <deque>
-#include <algorithm>
-#define OPER(name, key) float name(float a,float b){return(float)((a) key (b));}
+//global variables to parse
+int current=0;
+bool parseerror=false;
+std::deque<std::string> problems;
+std::deque<int> tokenids;
+int num_tokens=0;
+//expressnode definition
+struct expressnode {
+        std::string value;
+        expressnode* left;
+        expressnode* right;
+        bool isidentifier;
+        expressnode(std::string v,bool ident) : value(v),left(nullptr), right(nullptr), isidentifier(ident) {}
+        expressnode(std::string v, expressnode* l, expressnode* r) : value(v), left(l), right(r) {}
+};
+
+
+//defining base operators
+std::unordered_map<std::string, int> precedence = {{"+", 10},{"-", 10},{"*", 20},{"/", 20},{"%", 20}};
 float mod(float a,float b){
         float temp=a; 
         a=std::max(a,b);
@@ -27,10 +50,6 @@ OPER(lt,<)
 OPER(gt,>)
 OPER(le,<=)
 OPER(ge,>=)
-std::deque<std::string> problems;
-std::deque<int> tokenids;
-int num_tokens=0;
-
 
 std::unordered_map<std::string,float*> variables;
 std::unordered_map<std::string,float (*)(float,float)> baseoperators;
@@ -58,6 +77,13 @@ void definebasecommands(){
         temp={">=",&ge};push(temp);
         
 }
+bool checkvariable(int varpos){
+        auto temp=variables.find(problems[varpos]);
+        if (temp!=variables.end()){
+                return 1;
+        }
+        return 0;
+}
 
 void cleardeques(){
         problems.clear();
@@ -65,4 +91,4 @@ void cleardeques(){
         tokenids.clear();
 }
 
-
+#endif
