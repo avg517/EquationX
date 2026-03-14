@@ -1,0 +1,3 @@
+tested functions:
+    calculate_first_degree
+    generate_empty_graph
