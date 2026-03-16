@@ -1,3 +1,5 @@
+#ifndef INCLUDED_TOKENS
+#define INCLUDED_TOKENS
 //separator and identifier
 const int semicolonsign=0;
 const int identifiersign=1;
@@ -38,3 +40,4 @@ const int questionmark=25;
 //const int andsign=13;
 //const int orsign=14;
 //const int notsign=15;
+#endif
