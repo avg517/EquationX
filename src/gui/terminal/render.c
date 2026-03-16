@@ -1,12 +1,22 @@
 #include <ncurses.h>
-#include <cmath>
+//#include <math.h>
+#include <stdlib.h>
 #include "terminal-constants.h"
 
 void init_ncurses(){//initialisez ncurses
+    initscr();
+    cbreak();
+    noecho();
 
 
 }
-
+char** init_buffer(){
+    char** buffer = (char**) malloc(COLS*sizeof(char));
+    for(int i=0;i<COLS;i++){
+        buffer[i]=(char*) malloc(LINES*sizeof(char));
+    }
+    return buffer;
+}
 
 //time to use Bresenham's line algorithm :)
 char** render_line(int x1,int y1,int x2,int y2){//the function returns a matrix pointer which describes every point that needs to be rendered
@@ -18,12 +28,12 @@ char** render_line(int x1,int y1,int x2,int y2){//the function returns a matrix 
     int x=x1,y=y1;
 
     char** pixels =(char**) malloc(2*sizeof(char));
-    pixels[0]=(char*) malloc(dx*sizeof(char));//the first vector stores x value
-    pixels[1]=(char*) malloc(dx*sizeof(char));//the second one stores y value
-
-    for(int i=0;x<=x2;i++){
-        pixels[0][i]=x;
-        pixels[1][i]=y;
+    pixels[0]=(char*) malloc((1+dx)*sizeof(char));//the first vector stores x value// but in the first position it will store the size of the vector
+    pixels[1]=(char*) malloc((1+dx)*sizeof(char));//the second one stores y value
+    int i=0;
+    for(i=0;x<=x2;i++){
+        pixels[0][i+1]=x;
+        pixels[1][i+1]=y;
         x++;
         if(p<0){
             p = p +2*dy;
@@ -32,11 +42,25 @@ char** render_line(int x1,int y1,int x2,int y2){//the function returns a matrix 
             y++;
         }
     }
-
+    pixels[0][0]=i;
+    return pixels;
 
 }
 
+bool render_sprite(int x,int y,char** sprite,char** buffer){//this function renders the line from the render_line function,but the previous one only computes the pixels you need to "light up",this one puts it on the video buffer at some coordonates you specify
+    for(int i=1;i<=sprite[0][0];i++){
+        int x=sprite[0][i];
+        int y=sprite[1][i];
+        if(x>COLS || y > LINES){
+            return false;//returns false when the line is outside of the screen(but it doesn't mean it should stop the program,only to not continue rendering the line)
+        }else{
+            buffer[x][y]= LINE;
+        }
+        
 
+    }
+    return true;
+}
 
 void render_buffer(char** buffer){//the buffer needs to be the size of the window for this to work
     //a solution would be to make a very large buffer (for a terminal screen,but in memory it won't be that big)
@@ -49,4 +73,6 @@ void render_buffer(char** buffer){//the buffer needs to be the size of the windo
             mvaddch(y,x,buffer[x][y]);
         }
     }
+    refresh();
 }
+    
