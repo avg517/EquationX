@@ -69,3 +69,8 @@ double** calculate_second_degree(double lower_bound,double upper_bound,double a,
     }
 
 }*/
+
+
+
+
+//double** compute_graph()
