@@ -77,13 +77,7 @@ void definebasecommands(){
         temp={">=",&ge};push(temp);
         
 }
-bool checkvariable(int varpos){
-        auto temp=variables.find(problems[varpos]);
-        if (temp!=variables.end()){
-                return 1;
-        }
-        return 0;
-}
+
 
 void cleardeques(){
         problems.clear();

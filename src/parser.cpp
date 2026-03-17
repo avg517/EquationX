@@ -1,15 +1,13 @@
-#include <charconv>
 #include <cstring>
 #include <iostream>
-#include <fstream>
 #include <deque>
-#include <sstream>
 #include <string>
 #include <unordered_map>
-#include <variant>
+#include "parservariables.hpp"
 #include "tokens.h"
 #include "tokenizer.h"
 #include "functionclass.hpp"
+#include "expressfunc.hpp"
 //TODO make negative numbers work
 
 
@@ -81,13 +79,13 @@ int runequ(std::string strtoparse){//do not use this function, this is to test t
                 tokenids.push_back(identifiers[i]);
         }
         variables["a"]=new float(2);
-        expressnode* tree=parseExpression();
+        expressnode* tree=parseExpression(0, num_tokens);
         if (!tree || parseerror){
                 endparsing();
                 std::cout<<"parsing failed\n";
                 return -1;
         }
-        float answer=evaluate(tree);
+        float answer=evaluate(tree, nullptr);
         std::cout<<answer<<'\n';
         freeTree(tree);
         free_tokens(identifiers, rawstrings, num_tokens);
