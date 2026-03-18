@@ -7,7 +7,10 @@
 enum commandtype {
     EXPRESSION,
     IDENT,
-    DEFINE,
+    DEFINE,    
+    SEPARATOR,
+    IFSTART,
+    IFEND,
     RETURN
 };
 
@@ -29,14 +32,14 @@ public:
         commandnode* commandptr = nullptr;
         commandnode* lastcmdptr = nullptr;
         commandnode* currcmdptr = nullptr;
-        float returncode;
-
+        float returncode=0;
+        bool endedfunc=false;
         void appendacommand(commandtype cmdtp, commandnode *nextcmdnode, expressnode *expresstemp, std::string fname);
         bool advance();
         void executecommand();
         void evalcommands();
         void empty();
         void deletevariables();
-        void deletecommandnode(commandnode* cmdptr);
-        
+        void deletecommandnode(commandnode* cmdptr); 
 };
+std::unordered_map<std::string,function*> global_functions;//global_functions[name]=function*;
