@@ -1,7 +1,7 @@
 CC ?= gcc
 CXX ?= g++
 CFLAGS ?= -O2
-PREFIX ?= /usr/local
+PREFIX ?=/usr/local
 DESTDIR ?=
 CFLAGS ?= -O2
 TESTFLAGS ?= -g -O1
@@ -9,8 +9,8 @@ CXXFLAGS ?= -DFUNC_LOGS
 BUILD_DIR=./build
 
 OBJFILES := $(wildcard *.o)
-CPPFILES := $(wildcard *.o)
-CFILES := $(wildcard *.o)
+CPPFILES := $(wildcard *.cpp)
+CFILES := $(wildcard *.c)
 
 all: $(OBJFILES)
 
