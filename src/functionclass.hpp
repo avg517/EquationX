@@ -1,7 +1,4 @@
-#ifndef INCLUDED_FUNCS
-#define INCLUDED_FUNCS
-
-#include "expressfunc.hpp"
+#pragma once
 #include "parservariables.hpp"
 #include <deque>
 #include <unordered_map>
@@ -35,6 +32,7 @@ public:
         float returncode;
 
         void appendacommand(commandtype cmdtp, commandnode *nextcmdnode, expressnode *expresstemp, std::string fname);
+        bool advance();
         void executecommand();
         void evalcommands();
         void empty();
@@ -42,4 +40,3 @@ public:
         void deletecommandnode(commandnode* cmdptr);
         
 };
-#endif
