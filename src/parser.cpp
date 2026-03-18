@@ -4,12 +4,13 @@
 #include <string>
 #include <unordered_map>
 #include "parservariables.hpp"
-#include "tokens.h"
-#include "tokenizer.h"
+#include "tokenizer/tokens.h"
+#include "tokenizer/tokenizer.h"
 #include "functionclass.hpp"
 #include "expressfunc.hpp"
+#include "expressfunc.cpp"
 //TODO make negative numbers work
-
+//TODO make functions
 
 bool checknode(expressnode* nodetocheck){
         if (nodetocheck){
@@ -31,7 +32,7 @@ void parserootfunc(){
         int peeker=peek();
         if (peeker != oparantesesign){
                 parseerror=true;
-                return ;
+                return;
         }
         std::deque<std::string> params;
         while (peeker != cparantesesign){

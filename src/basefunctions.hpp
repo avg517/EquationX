@@ -8,7 +8,8 @@ class function;  // forward declaration
 
 extern std::ofstream outlogforfunc;
 extern bool funclogs;
-
 void definevariable(std::string varname, float value, function* func);
 void returnfunc(float value,function* func);
+void definefunction(std::string funcname);
+void delete_all_functions();
 #endif

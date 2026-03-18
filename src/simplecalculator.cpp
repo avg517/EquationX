@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include "parser.cpp"
+
 int main(){
         std::string input;
         while (input!="quit"){
