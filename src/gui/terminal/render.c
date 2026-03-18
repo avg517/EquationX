@@ -4,7 +4,7 @@
 #include "terminal-constants.h"
 
 unsigned char* generate_graphics(){
-    unsigned char* graphics =(unsigned char*) malloc(257*sizeof(char));
+    unsigned char* graphics =(unsigned char*) malloc(256*sizeof(char));
     for(int j=0x1;j<=0xFF;j+=0x1){
         graphics[j]=j;
     }
@@ -16,12 +16,12 @@ void init_ncurses(){//initialisez ncurses
     cbreak();
 }
 char** init_buffer(){
-    char** buffer = (char**) malloc((1+COLS)*sizeof(char));
+    char** buffer = (char**) malloc((2*COL)*sizeof(char));
     for(int i=0;i<COLS;i++){
-        buffer[i]=(char*) malloc((1+LINES)*sizeof(char));
-        for(int j=0;j<LINES;j++){
-            buffer[i][j]='0';
-        }
+        buffer[i]=(char*) malloc((2*LIN)*sizeof(char));
+        //for(int j=0;j<LINES;j++){
+        //    buffer[i][j]='0';
+        //}
     }
     return buffer;
 }
@@ -59,10 +59,10 @@ bool render_sprite(int x,int y,char** sprite,char** buffer){//this function rend
     for(int i=1;i<=sprite[0][0];i++){
         int x=sprite[0][i];
         int y=sprite[1][i];
-        if(x>=COLS || y >= LINES){
+        if(x>=COL || y >= LIN){
             return false;//returns false when the line is outside of the screen(but it doesn't mean it should stop the program,only to not continue rendering the line)
         }else{
-            buffer[x][y]=LINE;
+            //buffer[x][y]=1;//LINE;
         }
 
 
@@ -81,15 +81,15 @@ void render_buffer(char** buffer,unsigned char* graphics){//the buffer needs to 
 
     //buffer[2][3]='#';
     move(1,0);
-    for(int y=0;y<=LINES-1;y++){
-        for(int x=0;x<=COLS;x++){
+    for(int y=0;y<=LIN;y++){
+        for(int x=0;x<COL;x++){
             //mvaddch(y,x,buffer[x][y]);
             //addch(graphics[buffer[x][y]]);
             addch(buffer[x][y]);
             //addch(graphics[34]);
             //addch('#');
             //if(x==LINES-1){addch('s');}
-            if(x==LINES){
+            if(x==LIN){
                 //addch('O');
                 move(y+1,0);
             }
