@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include <iostream>
 #include "parservariables.hpp"
-#include "tokens.h"
+#include "./tokenizer/tokens.h"
 #include "expressfunc.hpp"
 #include "functionclass.cpp"
 function* currentfuncrunning=nullptr;
@@ -24,13 +24,14 @@ expressnode* parseExpression(int min_bp = 0,int maxparse=num_tokens) {
                 identifiersgn=false;
                 left = new expressnode(advance(),identifiersgn);
         } else if (type == identifiersign) {
-                if (checkvariable(currentfuncrunning,problems[current])==2){
+                /*if (checkvariable(currentfuncrunning,problems[current])==2){//function support variables, idk if this will work or not(probably not)
                         identifiersgn=true;
                 } else {
                         parseerror=true;
                         std::cout<<problems[current]<<" not defined\n";
                         return nullptr;
-                }
+                }*/
+                identifiersgn=true;
                 left = new expressnode(advance(),identifiersgn);
         } else if (type == oparantesesign) {
                 advance();
@@ -43,7 +44,7 @@ expressnode* parseExpression(int min_bp = 0,int maxparse=num_tokens) {
                 advance();
         } else {
                 parseerror=true;
-                std::cout << "Unexpected token\n";
+                std::cout << "Unexpected token\n"<<tokenids[current];
                 return nullptr;
         }
         while (true) {
@@ -91,14 +92,15 @@ float evaluate(expressnode* node,function* func=nullptr) {
                         } else if (checkvar==2){
                                 return *variables[node->value];
                         } else if (checkvar==-1){
-                                return -1;
+                                std::cout<<"Variable named \""<<node->value<<"\" wasnt declared in this scope\n";
                                 parseerror=true;
+                                return -1;
                         } else {
                                 std::cout<<"Something went wrong, its the code's fault, not yours\n";
                                 exit(EXIT_FAILURE);
                         }
                         std::cout<<node->value<<" ";
-                }{
+                } else {
                         return std::stof(node->value); 
                 }
         }
