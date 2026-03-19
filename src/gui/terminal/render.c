@@ -62,7 +62,7 @@ bool render_sprite(int x,int y,char** sprite,char** buffer){//this function rend
         if(x>=COL || y >= LIN){
             return false;//returns false when the line is outside of the screen(but it doesn't mean it should stop the program,only to not continue rendering the line)
         }else{
-            //buffer[x][y]=1;//LINE;
+            buffer[x][y]=1;//LINE;
         }
 
 
@@ -85,7 +85,7 @@ void render_buffer(char** buffer,unsigned char* graphics){//the buffer needs to 
         for(int x=0;x<COL;x++){
             //mvaddch(y,x,buffer[x][y]);
             //addch(graphics[buffer[x][y]]);
-            addch(buffer[x][y]);
+            //addch(buffer[x][y]);
             //addch(graphics[34]);
             //addch('#');
             //if(x==LINES-1){addch('s');}
