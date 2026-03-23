@@ -3,10 +3,10 @@
 #include <ncurses.h>
 #include <cstdlib>
 
-
 int main(){
     char** buffer = init_buffer();
-    char** sprite = render_line(5,5,10,15);
+    //char** sprite = render_line(5,5,6,70);
+    char** sprite = plotLine(5,5,60,70);
     render_sprite(2,4,sprite,buffer);
     unsigned char* graphics=generate_graphics();
     init_ncurses();
