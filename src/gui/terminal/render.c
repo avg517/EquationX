@@ -8,7 +8,7 @@
     unsigned char* graphics =(unsigned char*) calloc(256,sizeof(char));
     for(int j=0x1;j<=0xFF;j+=0x1){
         graphics[j]=j;
-    }
+    } 
     return graphics;
 }*/
 void init_ncurses(){//initialisez ncurses
@@ -17,15 +17,28 @@ void init_ncurses(){//initialisez ncurses
     noecho();
     
 }
-char** init_buffer(){
-    char** buffer = (char**) malloc((COL)*sizeof(char));
-    for(int i=0;i<COL;i++){
-        buffer[i]=(char*) malloc((LIN)*sizeof(char));
-        for(int j=0;j<LIN;j++){
+char** init_buffer(){//a solution to not dealing with weird mallocs would be to ask the user what size the screen has and use that
+    char** buffer = (char**) calloc(2*(100+COLS),sizeof(char));
+    for(int i=0;i<COLS;i++){
+        buffer[i]=(char*) calloc(2*(200+LINES),sizeof(char));
+        for(int j=0;j<LINES;j++){
+            buffer[i][j]=' ';
+            //if(j==LINES-1){buffer[i][j]='\0';}
+        }
+    }
+    buffer[COLS-1][LINES-1]='\n';
+    return buffer;
+}
+
+void empty_buffer(char** buffer){
+    for(int i=0;;i++){
+        for(int j=0;buffer[i][j]!='\0';j++){
+            if(buffer[i][j]=='\n'){
+                return;
+            }
             buffer[i][j]=' ';
         }
     }
-    return buffer;
 }
 /*char** clear_buffer(char** buffer){
     for(int i=0;i<COL;i++){
@@ -43,9 +56,9 @@ char** render_line(int x1,int y1,int x2,int y2){//don't use this function to ren
     int p= 2*dy - dx;
     int x=x1,y=y1;
 
-    char** pixels =(char**) malloc(2*sizeof(char));
-    pixels[0]=(char*) malloc((2+dx)*sizeof(char));//the first vector stores x value// but in the first position it will store the size of the vector
-    pixels[1]=(char*) malloc((2+dy)*sizeof(char));//the second one stores y value
+    char** pixels =(char**) calloc(2,sizeof(char));
+    pixels[0]=(char*) calloc((2+dx),sizeof(char));//the first vector stores x value// but in the first position it will store the size of the vector
+    pixels[1]=(char*) calloc((2+dy),sizeof(char));//the second one stores y value
     int i=0;
     for(i=1;x<=x2;i++){
         pixels[0][i]=x;
@@ -68,9 +81,14 @@ char** plotLine(int x0, int y0, int x1, int y1)//not made by me,but it's modifie
     int dx =  abs(x1-x0), sx = x0<x1 ? 1 : -1;
     int dy = -abs(y1-y0), sy = y0<y1 ? 1 : -1; 
     int err = dx+dy, e2; /* error value e_xy */
-    char** pixels =(char**) malloc(2*sizeof(char));
-    pixels[0]=(char*) malloc((2+dx)*sizeof(char));//the first vector stores x value// but in the first position it will store the size of the vector
-    pixels[1]=(char*) malloc((2+abs(dy))*sizeof(char));//the second one stores y value
+    char** pixels =(char**) calloc(2,sizeof(char));
+    pixels[0]=(char*) calloc((2+200),sizeof(char));//the first vector stores x value// but in the first position it will store the size of the vector
+    pixels[1]=(char*) calloc((2+200),sizeof(char));//the second one stores y value
+
+    //found the error why it give malloc corrupted top size: when using dy with malloc it gives the error, probably from weird shannanigans happening(like dy being -1)
+
+    //a good idea would be to replace the manual allocations with an stl vector type so it has a dynamic size, but it's for later
+
     int i;
     for(i=1;;i++){  /* loop */
         //setPixel(x0,y0);
@@ -91,7 +109,7 @@ bool render_sprite(int x,int y,char** sprite,char** buffer){//this function rend
     for(int i=1;i<=sprite[0][0];i++){
         int x=sprite[0][i];
         int y=sprite[1][i];
-        if(x>=COL || y >= LIN){
+        if(x>=COLS || y >= LINES){
             return false;//returns false when the line is outside of the screen(but it doesn't mean it should stop the program,only to not continue rendering the line)
         }else{
             buffer[x][y]=LINE;
@@ -130,8 +148,8 @@ void render_buffer(char** buffer){//the buffer needs to be the size of the windo
 
     //buffer[2][3]='#';
     move(0,0);
-    for(int y=0;y<LIN;y++){
-        for(int x=0;x<COL;x++){
+    for(int y=0;y<LINES;y++){
+        for(int x=0;x<COLS;x++){
             //mvaddch(y,x,buffer[x][y]);
             //addch(graphics[buffer[x][y]]);
             addch(buffer[x][y]);
