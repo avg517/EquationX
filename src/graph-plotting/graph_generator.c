@@ -30,8 +30,8 @@ int** calculate_first_degree(int lower_bound,int upper_bound,int a,int b){//the 
     //a and b are as described above how the eqaution is
     int** graph = generate_empty_graph(lower_bound,upper_bound);
     for(int x=lower_bound;x<=upper_bound;x++){
-        graph[0][x-lower_bound]=x;
-        graph[1][x-lower_bound]=x*a+b;//this is the solution to the first degree equation
+        graph[0][x-lower_bound]=x;//this is the x(coordinate)
+        graph[1][x-lower_bound]=x*a+b;//this is the solution to the first degree equation (the y coordinate)
     }
     return graph;
 }

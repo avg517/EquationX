@@ -1,0 +1,3 @@
+[submodule "src/gui/graphical/SDL"]
+	path = src/gui/graphical/SDL
+	url = https://github.com/libsdl-org/SDL.git
