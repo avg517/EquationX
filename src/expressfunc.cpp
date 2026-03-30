@@ -3,17 +3,30 @@
 #include <iostream>
 #include "parservariables.hpp"
 #include "./tokenizer/tokens.h"
-#include "expressfunc.hpp"
+#include "parser.hpp"
 #include "functionclass.cpp"
-function* currentfuncrunning=nullptr;
 int peek() {
-        if (current < num_tokens)
+        if (current < num_tokens){
                 return tokenids[current];
+        }
         return -1;
 }
-
-std::string advance() {
-        return problems[current++];
+std::string peek_string(){
+        if (current < num_tokens){
+                return problems[current];
+        }
+        return "no";
+}
+void advance() {
+        current++;
+}
+bool advance_expect(std::string errmsg){
+        advance();
+        if(current>=num_tokens){
+                std::cout<<errmsg;
+                return false;
+        }
+        return true;
 }
 expressnode* parseExpression(int min_bp = 0,int maxparse=num_tokens) {
         expressnode* left = nullptr;
@@ -22,7 +35,8 @@ expressnode* parseExpression(int min_bp = 0,int maxparse=num_tokens) {
         if (type == numbersign) {
                 //fukcing dumbass i deleted this
                 identifiersgn=false;
-                left = new expressnode(advance(),identifiersgn);
+                left = new expressnode(peek_string(),identifiersgn);
+                advance();
         } else if (type == identifiersign) {
                 /*if (checkvariable(currentfuncrunning,problems[current])==2){//function support variables, idk if this will work or not(probably not)
                         identifiersgn=true;
@@ -32,7 +46,8 @@ expressnode* parseExpression(int min_bp = 0,int maxparse=num_tokens) {
                         return nullptr;
                 }*/
                 identifiersgn=true;
-                left = new expressnode(advance(),identifiersgn);
+                left = new expressnode(peek_string(),identifiersgn);
+                advance();
         } else if (type == oparantesesign) {
                 advance();
                 left = parseExpression();
@@ -52,8 +67,8 @@ expressnode* parseExpression(int min_bp = 0,int maxparse=num_tokens) {
                 int type = peek();
                 if (type == semicolonsign) {break;}
                 std::string op = problems[current];
-                if (precedence.find(op) == precedence.end()) {break;}
-                int bp = precedence[op];
+                if (operators::precedence.find(op) == operators::precedence.end()) {break;}
+                int bp = operators::precedence[op];
                 if (bp < min_bp) {break;}
                 advance(); 
                 expressnode* right = parseExpression(bp + 1); // right binding
@@ -104,8 +119,8 @@ float evaluate(expressnode* node,function* func=nullptr) {
                         return std::stof(node->value); 
                 }
         }
-        auto it = baseoperators.find(node->value);
-        if (it == baseoperators.end()) {
+        auto it = operators::baseoperators.find(node->value);
+        if (it == operators::baseoperators.end()) {
                 std::cout << "Unknown operator: " << node->value << "\n";
                 return 0;
         }

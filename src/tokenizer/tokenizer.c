@@ -118,10 +118,10 @@ int tokenize(const char* str,int strsz,int** identifiers,char*** command,int* nu
                                 break;
                                 case '=':
                                         if (i+1<strsz && str[i+1]=='='){
-                                                appendinttoarray(*numoftokens, identifiers, equalsign);
+                                                appendinttoarray(*numoftokens, identifiers, equalequsign); 
                                                 ++i;
                                         } else {
-                                                appendinttoarray(*numoftokens, identifiers, equalequsign); 
+                                                appendinttoarray(*numoftokens, identifiers, equalsign);
                                         }
                                 break;
                                 case '[':

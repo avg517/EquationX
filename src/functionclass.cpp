@@ -1,7 +1,9 @@
 #pragma once
 #include "functionclass.hpp"
-#include "expressfunc.hpp"
 #include "basefunctions.cpp"
+#include "expressfunc.cpp"
+#include "parservariables.hpp"
+#include <charconv>
 #include <cstdlib>
 #include <iostream>
 #include <string>
@@ -9,10 +11,11 @@
 // Constructor for commandnode
 commandnode::commandnode(commandtype cmdconstuct, commandnode* nextcmdtemp,expressnode* expresstemp) : cmd(cmdconstuct), nextcmdnode(nextcmdtemp), expression(expresstemp) {}
 commandnode::commandnode(commandtype cmdconstuct, commandnode* nextcmdtemp,expressnode* expresstemp,std::string varname) : cmd(cmdconstuct), nextcmdnode(nextcmdtemp), expression(expresstemp) ,name(varname) {}
+commandnode::commandnode(commandtype cmdconstuct, commandnode* nextcmdtemp,expressnode* expresstemp,commandnode* cmpjmpptr,std::string varname) : cmd(cmdconstuct), nextcmdnode(nextcmdtemp), expression(expresstemp),jumptocmdnode(cmpjmpptr),name(varname) {}
 // function methods
-void function::appendacommand(commandtype cmdtp,commandnode *nextcmdnode,expressnode *expresstemp,std::string fname="") {
+void function::appendacommand(commandtype cmdtp,commandnode* nextcmdnode,expressnode *expresstemp,std::string fname) {
         //constructing the command to append
-        commandnode* cmdtoappend=new commandnode(cmdtp,nextcmdnode,expresstemp,fname);
+        commandnode* cmdtoappend=new commandnode(cmdtp,nullptr,expresstemp,fname);
         if (!commandptr){
                 //creating the first commandptr
                 //appending command to linked list
@@ -23,24 +26,74 @@ void function::appendacommand(commandtype cmdtp,commandnode *nextcmdnode,express
         } else {
                 //creating nextcommandptr
                 this->lastcmdptr->nextcmdnode=cmdtoappend; //appending linked list pointer to last
-                this->lastcmdptr=lastcmdptr->nextcmdnode; //setting the last last to new last
+                this->lastcmdptr=lastcmdptr->nextcmdnode; //setting the last last to new last 
         }
+}
+void function::appendacommand(commandtype cmdtp){
+        //uses the same logic as the last appendacommand()
+        commandnode* cmdtoappend=new commandnode(cmdtp,nullptr,nullptr,"");
+        if (!this->commandptr){
+                this->commandptr=cmdtoappend;
+                this->lastcmdptr=cmdtoappend;
+                this->currcmdptr=cmdtoappend;
+        } else {
+                this->lastcmdptr->nextcmdnode=cmdtoappend;
+                this->lastcmdptr=lastcmdptr->nextcmdnode;
+        }
+}
+void function::appendacommand(commandtype cmdtp,expressnode* expresstemp){
+        commandnode* cmdtoappend=new commandnode(cmdtp,nullptr,expresstemp,"");
+        
+}
+bool evalifstatement(function* func){
+        //try to advance forward, if not, end of function reached without closing the if
+        if (!func->advance()){
+                //nice error handling
+                std::cout<<"Uhm you sure you made the if statement right?\nI reached the end of the function:\""<<func->funcname<<"\" without finishing the if statement\n";
+                return false;
+        }
+        //if the next command is not a condition then wtf is the user trying to define?
+        float value;
+        if (!(func->currcmdptr->cmd==EXPRESSION)){
+                std::cout<<"Nice try buddy but you fucked up the condition in function:\""<<func->funcname<<"\"\n";
+                return false;
+        }
+        value=evaluate(func->currcmdptr->expression, func);//calculating the condition's value
+        //lets find the endif
+        commandnode* ifendptr=NULL;
+        /*while(func->advance()){//this won't work for nested if's
+                if (func->currcmdptr->cmd==IFEND){
+                        break;
+                }
+        }*/
+
+        //ifcommand(value, func, );
+        return 0;
 }
 
 void function::executecommand(){//this will execute simple specific commands like EXPRESSION, RETURN,IDENT (which is just x=20)
         std::string newvarname;//im defining this here becase of a weird define error in switch{}
         //this is the best part(sarcasm detected)
         int checkyvar;
+        
+        //for if 
+        float condition;
+        commandnode* rememberifstart;
         switch (this->currcmdptr->cmd) {
+                case commandtype::GOTO:
+                        this->currcmdptr=this->currcmdptr->jumptocmdnode;//thats it...i just need to jump...
+                break;
                 case commandtype::DEFINE:
                         //i need that expect function...
                         newvarname=this->currcmdptr->name;
                         //currcmdptr=currcmdptr->nextcmdnode; bug right here advance() exists lil bro
-                        definevariable(newvarname, 0, this);
                         if (this->advance()){
                                 if (this->currcmdptr->cmd==EXPRESSION){
                                         float value=evaluate(this->currcmdptr->expression,this);
-                                        *this->variables[newvarname]=value;
+                                        definevariable(newvarname, value, this);
+                                } else if (this->currcmdptr->cmd==SEPARATOR){
+                                        definevariable(newvarname, 0, this);
+                                        
                                 }
                         }
                         break;
@@ -81,16 +134,35 @@ void function::executecommand(){//this will execute simple specific commands lik
                         this->returncode=evaluate(this->currcmdptr->expression, this);
                 break;
                 case commandtype::IFSTART:
+                        rememberifstart=this->currcmdptr;//remembering the start of the if statement
                         if (!advance()){
                                 std::cout<<"Wtf did you put inside the if statement bro?\n";
                                 return;
+                        }//advancing
+                        if (this->currcmdptr->cmd!=EXPRESSION){
+                                std::cout<<"The fuck happened with the condition?\n";
+                                return;
                         }
-                        commandnode* currcmdptrcopy=this->currcmdptr;//this temorarily remembers IFSTART command
-                        while((!this->advance()) && !(this->currcmdptr->cmd==IFEND)) {}
-                        if (this->currcmdptr->cmd==IFEND){
-                                commandnode* cmdtemp=this->currcmdptr;
-                                this->currcmdptr=currcmdptrcopy;
+                        //uhm i fucked something up here...cause im on the EXPRESSION command node now... theres no jumptocmdnode
+                        //let's try again with a trash implementation :D 
+                        
+                        condition=condition=evaluate(this->currcmdptr->expression,this);
+                        ifcommand(condition,this,rememberifstart->jumptocmdnode);
+                break;
+                case commandtype::CALLFUNC:
+                        //this is temporary as a better CALLFUNC will be added in "basefunctions.cpp"
+                        if(global_functions.find(this->currcmdptr->name)==global_functions.end()){
+                                //WRONG:not defined i guess
+                                std::cout<<"Function:\""<<this->currcmdptr->name<<"\" was not declared in this scope\n";
                         }
+                        //running it
+                        function* functorun=global_functions[this->currcmdptr->name];
+                        float value;
+                        functorun->evalcommands();
+                        value=functorun->returncode;
+                        functorun->returncode=0;
+                        functorun->deletevariables();
+                        //idk if i even used my own code right :D
                 break;
         }
         if (!this->advance()){
@@ -112,6 +184,14 @@ void function::evalcommands() {
                 executecommand();
         }*/
         //lets try this again ill define and ended func in the functions parameters
+        if (!this->currcmdptr){
+                if (!this->commandptr){
+                        std::cout<<"No commands to run\n";
+                        return;
+                } else {
+                        this->currcmdptr=this->commandptr;
+                }
+        }
         while (!endedfunc){
                 executecommand();
         }

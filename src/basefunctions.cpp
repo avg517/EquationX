@@ -4,6 +4,8 @@
 #include "basefunctions.hpp"
 #include <iostream>
 #include <fstream>
+//very fucked code but it works
+
 std::ofstream outlogforfunc("functionlogs.txt");
 #ifdef FUNC_LOGS
 bool funclogs=true;
@@ -20,6 +22,8 @@ void definefunction(std::string funcname){//creates a new gloabal function with 
         //green flag...create the new function* with function name
         global_functions[funcname]=new function;
         global_functions[funcname]->funcname=funcname;
+        outlogforfunc<<"Function named \""<<funcname<<"\" was defined \n";
+        outlogforfunc.flush();
 }
 
 void delete_all_functions(){//this function deletes everything
@@ -29,9 +33,19 @@ void delete_all_functions(){//this function deletes everything
                 delete i.second;
                 
         }
+        if (funclogs){
+                outlogforfunc<<"Deleted every single function \n";
+                outlogforfunc.flush();
+        }
 }
 
 void definevariable(std::string varname,float value,function* func){//defines a variable with value and varname
+        std::cout << "[HIT] definevariable called with: " 
+          << varname << " value=" << value 
+          << " func=" << (func ? func->funcname : "GLOBAL") 
+          << "\n";
+
+
         float* temp=new float(value);
         //!func->create the variable globally if possible
         if (!func){
@@ -42,7 +56,8 @@ void definevariable(std::string varname,float value,function* func){//defines a 
                 }
                 if (funclogs) {
                         //logs the global creation of the variable with varname and value
-                        outlogforfunc<<"Variable \""<<varname<<"\" created with value:"<<value<<" globally\n";
+                        outlogforfunc<<"Variable \""<<varname<<"\" defined with value:"<<value<<" globally\n";
+                        outlogforfunc.flush();
                 }
                 variables[varname]=temp;
                 return;
@@ -58,6 +73,7 @@ void definevariable(std::string varname,float value,function* func){//defines a 
                 //logs the variable created, the name, value and functioname 
                 //FORESHADOWING:i swear this fuck(help) us up in debugging
                 outlogforfunc<<"Variable \""<<varname<<"\" created with value:"<<value<<" in function \""<<func->funcname<<"\"\n";
+                outlogforfunc.flush();
         }
 }
 
@@ -67,9 +83,12 @@ void returnfunc(float value, function *func){
         func->deletevariables();
 }
 void ifcommand(float condition,function* func,commandnode* ifend){
+        std::cout<<"Starting the ifcommand\n";
         if (condition!=0){
+                std::cout<<"This is true\n";
                 return;
         }
+        std::cout<<"This is false, jumping\n";
         func->currcmdptr=ifend;
         return;
 }

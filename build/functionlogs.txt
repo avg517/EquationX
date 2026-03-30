@@ -1,0 +1,3 @@
+Function named "main" was defined 
+Variable "a" created with value:-1 in function "main"
+Deleted every single function 

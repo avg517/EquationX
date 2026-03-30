@@ -1,9 +1,12 @@
 #include <cstddef>
+#include <fstream>
 #include <iostream>
+#include <sstream>
 #include "basefunctions.cpp"
 #include "expressfunc.cpp"
 #include "functionclass.cpp"
 #include "functionclass.hpp"
+#include "parser.hpp"
 #include "parservariables.hpp"
 #include "tokenizer/tokenizer.h"
 #include "parser.cpp"
@@ -14,7 +17,7 @@ void initzaparser(std::string input){
         //tokenizing
         tokenize(input.c_str(), input.size(),&identifiers, &rawstrings, &num_tokens);
         //initializing symbols
-        definebasecommands();
+        operators::definebaseoperators();
         //adding tonkens to the global variables of the parser
         for (int i=0;i<num_tokens;++i){
                 problems.push_back(rawstrings[i]);
@@ -26,32 +29,16 @@ void initzaparser(std::string input){
 
 
 int main(){
+        std::ifstream fin("simpletest.math");
         //express yourself :D
-        std::string inputstr="(3+5)*4;testvariable;";
+        std::ostringstream fstr;
+        fstr<<fin.rdbuf();
+        std::string inputstr=fstr.str();
         initzaparser(inputstr);
         //dumbass i parsedExpression before i initialized the tokens :D
-        expressnode* exprnode=parseExpression();//parsing (3+5)*4
-        if (parseerror==true){
-                std::cout<<"Parse error occured quitting...\n";
-                return -1;
-        }
-        current=8;
-        //got an error...a not defined...fuck...this aint good
-        //ill remove the parsing protections, they're annoying and i check into evaluate anyway... 
-        expressnode* noder=parseExpression(0,num_tokens);//parsing "testvariable;"
-        
-        if (parseerror==true){
-                std::cout<<"Parse error occured quitting...\n";
-                return -1;
-        }
-        //creating a function tree manually i guess(fuck testing)
-        definefunction("testfunc");
-        global_functions["testfunc"]->appendacommand(DEFINE, nullptr, nullptr, "testvariable");
-        global_functions["testfunc"]->appendacommand(EXPRESSION, nullptr, exprnode);
-        global_functions["testfunc"]->appendacommand(SEPARATOR,nullptr, nullptr);
-        global_functions["testfunc"]->appendacommand(EXPRESSION,nullptr,noder);
-        global_functions["testfunc"]->evalcommands();
-        std::cout<<"Function testfunc returned:"<<global_functions["testfunc"]->returncode<<"\n";
+        parseroot();
+        global_functions["main"]->evalcommands();
+        std::cout<<"Function testfunc returned:"<<global_functions["main"]->returncode<<"\n";
         //if(global_functions["testfunc"]->variables["testvariable"]){std::cout<<*global_functions["testfunc"]->variables["testvariable"];} else {
           //      std::cout<<"muie variabila nu a fost creata\n";
         //}

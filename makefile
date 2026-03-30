@@ -1,34 +1,32 @@
 CC ?= gcc
 CXX ?= g++
-CFLAGS ?= -O2
-PREFIX ?=/usr/local
+#bro dont put it in usr/local...nixos doesnt take that lightly...
+PREFIX ?=
 DESTDIR ?=
-CFLAGS ?= -O2
-TESTFLAGS ?= -g -O1
-CXXFLAGS ?= -DFUNC_LOGS
+CFLAGS ?=-O2 -c
+CXXFLAGS ?= -g -DFUNC_LOGS
 BUILD_DIR=./build
+#hard coding the cpp files because of errors
+SRC=./src/testfunctioncreation.cpp ./src/simplecalculator.cpp
+#c files and their respective object file
+CFILES=$(wildcard src/tokenizer/*.c) #searches cfiles in the src/tokenizer...if you wanna add a folder go ahead
+OBJFILES = $(addprefix $(BUILD_DIR)/, $(patsubst %.c, %.o, $(notdir $(CFILES))))
+#c++ output of compiled sourcefiles
+outputfiles := $(patsubst ./src/%.cpp,$(BUILD_DIR)/%,$(SRC))
+all: makefolder buildproject
+	echo "Done"
+makefolder:
+	mkdir $(BUILD_DIR)
+buildproject: $(OBJFILES) $(outputfiles)
 
-OBJFILES := $(wildcard *.o)
-CPPFILES := $(wildcard *.cpp)
-CFILES := $(wildcard *.c)
+$(BUILD_DIR)/%: src/%.cpp $(OBJFILES)
+	$(CXX) $(OBJFILES) $(CXXFLAGS) $< -o $@
 
-all: $(OBJFILES)
-
-	#$(CC) $(CFLAGS) -c src/tokenizer.c -o build/tokenizer.o
-	$(CXX) $(CFLAGS) src/$(CPPFILES) build/$(OBJFILES) -o build/calc
-
-
-
-$(OBJFILES):$(CFILES)
-	mkdir -p build
-	$(CC) $(CFLAGS) -c $(CFILES) -o build/$(OBJFILES)
-
-
+$(BUILD_DIR)/%.o: src/tokenizer/%.c
+	$(CC) $(CFLAGS) $< -o $@
 install:
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	cp $(BUILD_DIR)/calc $(DESTDIR)$(PREFIX)/bin/
-	cp $(BUILD_DIR)/functest $(DESTDIR)$(PREFIX)/bin/
-#./src/tokenizer/%.o: %.c:
-#	$(CC) $(CFLAGS) -o $(BUILD_DIR)/$@ $<
+	cp $(BUILD_DIR)/functest $(DESTDIR)$(PREFIX)bin/
 clean:
 	rm -rf build

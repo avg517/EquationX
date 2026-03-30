@@ -11,17 +11,21 @@ enum commandtype {
     SEPARATOR,
     IFSTART,
     IFEND,
-    RETURN
+    RETURN,
+    CALLFUNC,
+    GOTO
 };
 
 struct commandnode {
     commandtype cmd;
     std::string name;
     commandnode* nextcmdnode;
+    commandnode* jumptocmdnode;
     expressnode* expression;
 
     commandnode(commandtype cmdconstuct,commandnode* nextcmdtemp,expressnode* expresstemp);
     commandnode(commandtype cmdconstuct,commandnode* nextcmdtemp,expressnode* expresstemp,std::string varname);
+    commandnode(commandtype cmdconstuct,commandnode* nextcmdtemp,expressnode* expresstemp,commandnode* cmdjmpptr,std::string varname);
 };
 
 class function {
@@ -35,6 +39,9 @@ public:
         float returncode=0;
         bool endedfunc=false;
         void appendacommand(commandtype cmdtp, commandnode *nextcmdnode, expressnode *expresstemp, std::string fname);
+        void appendacommand(commandtype cmdtp);
+        void appendacommand(commandtype cmdtp,expressnode *expresstemp);
+        void appendacommand(commandtype cmdtp, std::string fname);
         bool advance();
         void executecommand();
         void evalcommands();
