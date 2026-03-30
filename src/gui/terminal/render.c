@@ -5,7 +5,7 @@
 
 
 unsigned char* generate_graphics(){
-    unsigned char* graphics =(unsigned char*) malloc(256*sizeof(char));
+    unsigned char* graphics =(unsigned char*) calloc(256,sizeof(char));
     for(int j=0x1;j<=0xFF;j+=0x1){
         graphics[j]=j;
     }
@@ -101,13 +101,14 @@ bool render_sprite(int x,int y,char** sprite,char** buffer){//this function rend
     return true;
 }
 
-void render_equation(int x, int y,char*** points){
+void render_equation(int x, int y,char*** points,char** buffer){//this function renders a collection of "line" vectors to the buffer(used for rendering equations)
+    //"line" vectors are the vectors that store the pixels on the screen needed to render a line from point A to point B, like in the render_sprite function
     for(int j=1;j<=points[0][0][0];j++){
         for(int i=1;i<=points[j][0][0];i++){
             int x=points[j][0][i];
             int y=points[j][1][i];
             if(x>=COL || y >= LIN){
-                return false;//returns false when the line is outside of the screen(but it doesn't mean it should stop the program,only to not continue rendering the line)
+                return; //false;//returns false when the line is outside of the screen(but it doesn't mean it should stop the program,only to not continue rendering the line)
             }else{
                 buffer[x][y]=LINE;
             }
