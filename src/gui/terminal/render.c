@@ -152,7 +152,16 @@ void render_buffer(char** buffer){//the buffer needs to be the size of the windo
         for(int x=0;x<COLS;x++){
             //mvaddch(y,x,buffer[x][y]);
             //addch(graphics[buffer[x][y]]);
-            addch(buffer[x][y]);
+            
+            if(buffer[x][y]==LINE){
+                addch(LINE);
+            }else{
+                addch(' ');
+            }
+            
+            //addch(buffer[x][y]);//this is the one that kinda worked
+            
+            
             //addch(graphics[34]);
             //addch('#');
             //if(x==LINES-1){addch('s');}
