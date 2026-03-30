@@ -4,22 +4,23 @@
 #include "terminal-constants.h"
 
 
-unsigned char* generate_graphics(){
+/*unsigned char* generate_graphics(){
     unsigned char* graphics =(unsigned char*) calloc(256,sizeof(char));
     for(int j=0x1;j<=0xFF;j+=0x1){
         graphics[j]=j;
     }
     return graphics;
-}
+}*/
 void init_ncurses(){//initialisez ncurses
     initscr();
-    noecho();
     cbreak();
+    noecho();
+    
 }
 char** init_buffer(){
-    char** buffer = (char**) malloc((2*COL)*sizeof(char));
+    char** buffer = (char**) malloc((COL)*sizeof(char));
     for(int i=0;i<COL;i++){
-        buffer[i]=(char*) malloc((2*LIN)*sizeof(char));
+        buffer[i]=(char*) malloc((LIN)*sizeof(char));
         for(int j=0;j<LIN;j++){
             buffer[i][j]=' ';
         }
@@ -118,8 +119,9 @@ void render_equation(int x, int y,char*** points,char** buffer){//this function 
     }
 }
 
+//the error with malloc corrupted top size is in this function below
 
-void render_buffer(char** buffer,unsigned char* graphics){//the buffer needs to be the size of the window for this to work
+void render_buffer(char** buffer){//the buffer needs to be the size of the window for this to work
     //a solution would be to make a very large buffer (for a terminal screen,but in memory it won't be that big)
 
     //refresh();
@@ -131,16 +133,17 @@ void render_buffer(char** buffer,unsigned char* graphics){//the buffer needs to 
     for(int y=0;y<LIN;y++){
         for(int x=0;x<COL;x++){
             //mvaddch(y,x,buffer[x][y]);
-            addch(graphics[buffer[x][y]]);
-            //addch(buffer[x][y]);
+            //addch(graphics[buffer[x][y]]);
+            addch(buffer[x][y]);
             //addch(graphics[34]);
             //addch('#');
             //if(x==LINES-1){addch('s');}
-            if(x==COL-1){
+            //if(x==COL-1){
                 //addch('O');
-                move(y+1,0);
-            }
+                
+            //}
         }
+        move(y+1,0);
     }
     refresh();
 }
