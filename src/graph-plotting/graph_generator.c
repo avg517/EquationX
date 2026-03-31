@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "graph_generator.h"
+#include "tokens.h"
 
 //we will make a function that generates every solution that is an integer to every equation degree
 //and then make it so it uses float, so you can specify the amount of precision you want
@@ -10,9 +11,10 @@
 //the first function is the one for the 1st degree equation:  f(x)= x * a + b
 //it will returna pointer to a matrix with two vectors(the first row(row 0) says the x coordonate,and the second one says the y coordonate)
 
-
+//TODO: use a deque for graphs instead of vectors
 //TODO: make a struct for a matrix(the one from math,not CS)
 //TODO: make another set of function that can use floating point numbers for better accuracy
+//TODO: use a map to store graphs(because it's in the format of key:string which could be used as x_value:y_value)
 int** generate_empty_graph(int lower_bound, int upper_bound){
     int** graph=(int**) std::malloc(2*sizeof(int));
     graph[0]=(int*) std::malloc((upper_bound-lower_bound+1)*sizeof(int));
@@ -70,9 +72,22 @@ double** calculate_second_degree(double lower_bound,double upper_bound,double a,
 
 }*/
 
+//this function puts every possible x into the graph vector which increases at a given rate
 
 
 
-double** compute_graph(){
-    
+//for example: it can fill a graph vector with numbers starting at 5 and ending at 8 at a rate of 0.5 which will result in the following vector
+bool initialize_graph(double** graph,double rate,double lower_bound,double upper_bound){
+    double x=0;//x*rate + lower_bound gives the current number at which it is
+    for(int i=0;x*rate+lower_bound<=upper_bound;i++){
+        graph[0][i]=x*rate+lower_bound;
+        graph[1][i]=x*rate+lower_bound;
+        x++;
+    }
+    return true;
+}
+
+//this function takes a graph(that might be empty or not) and applies a given operation to it(for example +4)
+double** compute_graph(double** graph,double flag,){//flag is the operation flag described as in the file tokens.h
+    for(int i=0;)
 }
