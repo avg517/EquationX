@@ -1,16 +1,16 @@
 //this is the main cpp program file used to link all together
 
-#include "src/basefunctions.cpp"
-#include "src/expressfunc.cpp"
-#include "src/functionclass.cpp"
-#include "src/includethemall.cpp"
-#include "src/parser.cpp"
-#include "src/simplecalculator.cpp"
-#include "src/graph-plotting/graph_generator.cpp"
-#include "src/gui/terminal/render.c"
+#include "src/basefunctions.hpp"
+#include "src/expressfunc.hpp"
+#include "src/functionclass.hpp"
+#include "src/includethemall.hpp"
+#include "src/parser.hpp"
+//#include "src/simplecalculator.hpp"
+#include "src/graph-plotting/graph_generator.hpp"
+#include "src/gui/terminal/render.h"
 
 
 int main(){
 
-    
+
 }
