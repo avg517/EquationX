@@ -1,3 +1,4 @@
+//sugestion: make the constants be upper_case instead of lower case
 #ifndef INCLUDED_TOKENS
 #define INCLUDED_TOKENS
 //separator and identifier
@@ -18,6 +19,9 @@ const int minussign=18;
 const int dividesign=19;
 const int multiplysign=20;
 const int modsign=26;
+/*sugestion:
+add square root and ^
+*/
 //separator
 const int dotsign=8;
 const int commasign=9;

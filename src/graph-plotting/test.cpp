@@ -1,4 +1,4 @@
-#include "graph_generator.h"
+#include "graph_generator.hpp"
 #include <iostream>
 
 int main(){
