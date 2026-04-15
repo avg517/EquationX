@@ -1,8 +1,11 @@
-#include <stdlib.h>
-#include <stdio.h>
+//#include <stdlib.h>
+//#include <stdio.h>
+//#include <deque>
+//#include <pair>
+#include <cstdlib>
 #include <math.h>
-#include "graph_generator.h"
-#include "tokens.h"
+//#include "graph_generator.hpp"
+#include "../tokenizer/tokens.h"
 
 //we will make a function that generates every solution that is an integer to every equation degree
 //and then make it so it uses float, so you can specify the amount of precision you want
@@ -17,8 +20,8 @@
 //TODO: use a map to store graphs(because it's in the format of key:string which could be used as x_value:y_value)
 int** generate_empty_graph(int lower_bound, int upper_bound){
     int** graph=(int**) std::malloc(2*sizeof(int));
-    graph[0]=(int*) std::malloc((upper_bound-lower_bound+1)*sizeof(int));
-    graph[1]=(int*) std::malloc((upper_bound-lower_bound+1)*sizeof(int));
+    graph[0]=(int*) std::malloc((upper_bound-lower_bound+1)*sizeof(int));//x
+    graph[1]=(int*) std::malloc((upper_bound-lower_bound+1)*sizeof(int));//y
     return graph;
 }
 double** generate_empty_graph_double(int lower_bound, int upper_bound){
@@ -27,6 +30,8 @@ double** generate_empty_graph_double(int lower_bound, int upper_bound){
     graph[1]=(double*) std::malloc((upper_bound-lower_bound+1)*sizeof(double));
     return graph;
 }
+
+
 
 int** calculate_first_degree(int lower_bound,int upper_bound,int a,int b){//the lower and upper bound is to define what is the interval for x so it doesn't generate infinite solutions
     //a and b are as described above how the eqaution is
@@ -77,17 +82,40 @@ double** calculate_second_degree(double lower_bound,double upper_bound,double a,
 
 
 //for example: it can fill a graph vector with numbers starting at 5 and ending at 8 at a rate of 0.5 which will result in the following vector
-bool initialize_graph(double** graph,double rate,double lower_bound,double upper_bound){
+void initialize_graph(double** graph,double rate,double lower_bound,double upper_bound){
     double x=0;//x*rate + lower_bound gives the current number at which it is
-    for(int i=0;x*rate+lower_bound<=upper_bound;i++){
+    int i;
+    for(i=0;x*rate+lower_bound<=upper_bound;i++){
         graph[0][i]=x*rate+lower_bound;
         graph[1][i]=x*rate+lower_bound;
         x++;
     }
-    return true;
+    graph[0][i+1]='\0';
+    graph[1][i+1]='\0';
+    //return true;
 }
 
 //this function takes a graph(that might be empty or not) and applies a given operation to it(for example +4)
-double** compute_graph(double** graph,double flag,){//flag is the operation flag described as in the file tokens.h
-    for(int i=0;)
+double** compute_graph(double** graph,int flag,double number){//flag is the operation flag described as in the file tokens.h  
+    switch(flag){
+        case minussign:
+            number= (-1)*number;//makes it so number is negative
+        case addsign:
+            for(int i=0;graph[0][i]!='\0';i++){
+                graph[1][i]+=number;//adds number to every y coordinate
+            }
+            break;
+        case dividesign:
+            number= 1/number;// makes it so when multiplying it is like dividing by number
+        case multiplysign:
+            for(int i=0;graph[0][i]!='\0';i++){
+                graph[1][i]*=number;
+            }
+            break;
+        case modsign://don't know who would use modsign,but I will added just in case
+            for(int i=0;graph[0][i]!='\0';i++){
+                graph[1][i]%=number;
+            }
+    }
+    return graph;
 }
