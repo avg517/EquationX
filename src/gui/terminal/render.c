@@ -13,8 +13,9 @@
 }*/
 void init_ncurses(){//initialisez ncurses
     initscr();
-    cbreak();
     noecho();
+    cbreak();
+    keypad(stdscr, TRUE);
     
 }
 char** init_buffer(){//a solution to not dealing with weird mallocs would be to ask the user what size the screen has and use that
@@ -107,12 +108,12 @@ char** plotLine(int x0, int y0, int x1, int y1)//not made by me,but it's modifie
 
 bool render_sprite(int x,int y,char** sprite,char** buffer){//this function renders the line from the render_line function,but the previous one only computes the pixels you need to "light up",this one puts it on the video buffer at some coordonates you specify
     for(int i=1;i<=sprite[0][0];i++){
-        int x=sprite[0][i];
-        int y=sprite[1][i];
-        if(x>=COLS || y >= LINES){
+        int x1=sprite[0][i]+x;
+        int y1=sprite[1][i]+y;
+        if(x1>=COLS || y1 >= LINES){
             return false;//returns false when the line is outside of the screen(but it doesn't mean it should stop the program,only to not continue rendering the line)
         }else{
-            buffer[x][y]=LINE;
+            buffer[x1][y1]=LINE;
         }
 
 
@@ -120,7 +121,20 @@ bool render_sprite(int x,int y,char** sprite,char** buffer){//this function rend
     return true;
 }
 
-void render_equation(int x, int y,char*** points,char** buffer){//this function renders a collection of "line" vectors to the buffer(used for rendering equations)
+int*** generate_equation_sprite(double** graph){
+    int size=0;
+    for(int i=0;graph[1][i]!='\0';i++){
+        size++;
+    }
+    int*** points=(int***) calloc(size,sizeof(int));
+
+    for(int i=1;graph[1][i+1]!='\0';i++){
+        points[i]=plotLine(graph[0][i],graph[1][i],graph[0][i+1],graph[1][i+1]);
+    }
+    return points;
+}
+
+void render_equation(int x, int y,int*** points,char** buffer){//this function renders a collection of "line" vectors to the buffer(used for rendering equations)
     //"line" vectors are the vectors that store the pixels on the screen needed to render a line from point A to point B, like in the render_sprite function
     for(int j=1;j<=points[0][0][0];j++){
         for(int i=1;i<=points[j][0][0];i++){

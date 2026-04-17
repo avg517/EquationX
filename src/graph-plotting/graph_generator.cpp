@@ -96,7 +96,7 @@ void initialize_graph(double** graph,double rate,double lower_bound,double upper
 }
 
 //this function takes a graph(that might be empty or not) and applies a given operation to it(for example +4)
-double** compute_graph(double** graph,int flag,double number){//flag is the operation flag described as in the file tokens.h  
+void compute_graph(double** graph,int flag,double number){//flag is the operation flag described as in the file tokens.h  
     switch(flag){
         case minussign:
             number= (-1)*number;//makes it so number is negative
@@ -117,5 +117,4 @@ double** compute_graph(double** graph,int flag,double number){//flag is the oper
                 graph[1][i]%=number;
             }
     }
-    return graph;
 }
