@@ -1,3 +1,4 @@
+#pragma once
 //sugestion: make the constants be upper_case instead of lower case
 #ifndef INCLUDED_TOKENS
 #define INCLUDED_TOKENS

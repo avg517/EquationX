@@ -1,15 +1,18 @@
 //this is the main cpp program file used to link all together
 
-#include "src/basefunctions.hpp"
-#include "src/expressfunc.hpp"
-#include "src/functionclass.hpp"
-#include "src/includethemall.hpp"
-#include "src/parser.hpp"
-//#include "src/simplecalculator.hpp"
-#include "src/graph-plotting/graph_generator.hpp"
-#include "src/gui/terminal/render.h"
-#include "./src/tokenizer/tokens.h"
-
+//#include "basefunctions.hpp"
+//#include "expressfunc.hpp"
+//#include "functionclass.hpp"
+//#include "includethemall.hpp"
+//#include "parser.hpp"
+//#include "simplecalculator.hpp"
+#include "./graph-plotting/graph_generator.hpp"
+#include "./gui/terminal/render.h"
+#include "./tokenizer/tokens.h"
+#include <ncurses.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <fstream>
 /*COMMAND LINE ARGUMENTS:
 -h --help           prints the help screen
 -r --render <file>  renders a function defined in a file
@@ -28,72 +31,84 @@ bool program_on=true;
     return argument;
 }*/
 
-int get_flag(){
-    char input =getch();
-    switch(input){
-        case '-';
-            return minussign;
-        case '+':
-            return addsign;
-        case '*':
-            return multiplysign;
-        case '/':
-            return dividesign;
-    }
-}
+
+std::ifstream fin("equation.eq");
 
 
 
-double** create_graph(){//it is like in vim.In this mode you enter commands(and equations in this case to compute)
-    double lower_bound =scanw();
-    double upper_bound =scanw();
-    double** graph = generate_empty_graph_double(lower_bound,upper_bound);
-    double rate =scanw();
-    initialize_graph(graph,rate,lower_bound,upper_bound);
-    return graph;
-
-}
-
-void add_to_graph(double** graph){
-    int flag=get_flag();
-    int number=scanw();
-    compute_graph(graph,flag,number);
-}
-
-void handle_input(char** buffer){
+void handle_input(char** buffer,double** graph){
     char input = getch();
-    if(input=='q'){program_on=false}
+    if(input=='q'){program_on=false;}
     if(input==0x1B){
         move(LINES-1,0);
         echo();
         create_graph();
         
-        double** graph=create_graph();
+        graph=create_graph();
         add_to_graph(graph);
         int*** points =generate_equation_sprite(graph);
         render_equation(4,4,points,buffer);//the beggining of the graph will be in a fixed position for the purpose of this demo
-        
+        std::free(points);
     }
 }
 
 void render(){//the function renders the graph 
     init_ncurses();
+    double** graph=NULL;
     char** buffer = init_buffer();
     char* input_command=(char*) calloc(256,sizeof(char));
     while(program_on){
-        handle_input(buffer);
+        handle_input(buffer,graph);
         render_buffer(buffer);
         napms(16);
     }
     //std::cout<<LINES<<" "<<COLS;
     stop_ncurses();
 
-    free(buffer);
-    free(sprite);
+    std::free(buffer);
+    std::free(input_command);
+    free(graph);
     //free(graphics);
 }
 
+void read_file(char** buffer){
+    double x0,x1,y0,y1;
+    fin>>x0>>y0>>x1>>y1;
+    int** sprite = plotLine(x0,y0,x1,y1);
+    render_sprite(1,1,sprite,buffer);
+    std::free(sprite);
+}
+
+void handle_input2(){
+    char input = getch();
+    if(input=='q'){program_on=false;}
+}
+
+void render2(){
+    init_ncurses();
+    double** graph=NULL;
+    char** buffer = init_buffer();
+    while(program_on){
+        read_file(buffer);
+        render_buffer(buffer);
+        handle_input2();
+        napms(16);
+    }
+    //std::cout<<LINES<<" "<<COLS;
+    stop_ncurses();
+
+    std::free(buffer);
+    //std::free(input_command);
+    free(graph);
+    //free(graphics);
+}
+
+
 int main(int argc, char *argv[]){
+    //render();
+    render2();
+    
+    
     /*while(argv[pos-1]!=' '){
         pos++;
     }

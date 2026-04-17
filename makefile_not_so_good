@@ -1,0 +1,31 @@
+#this is the second version of the makefile which is WIP
+CC ?= gcc
+CXX ?= g++
+CFLAGS ?= -O2
+PREFIX ?= /usr/local
+DESTDIR ?=
+CFLAGS ?= -O2
+TESTFLAGS ?= -g -O1
+CXXFLAGS ?= -DFUNC_LOGS
+BUILD_DIR=./build
+
+OBJFILES := $(wildcard *.c.o)
+CPPFILES := $(wildcard *.cpp)
+HFILES ?= $(wildcard *.h)
+HPPFILES ?= $(wildcard *.hpp)
+CFILES := $(wildcard *.c)
+
+#CFILES := /tokenizer/tokenizer.c /gui/terminal/render.c 
+#HFILE := /tokenizer/tokenizer.h /tokenizer/tokens.h /gui/terminal/render.h /gui/terminal/terminal-constants.h
+#CPPFILES := ../main.cpp /basefunctions.cpp /expressfunc.cpp /functionclass.cpp /includethemall.cpp /parser.cpp /graph-plotting/graph_generator.cpp
+#HPPFILES := /basefunctions.hpp /expressfunc.hpp /functionclass.hpp /parservariables.hpp /graph-plotting/graph_generator.hpp
+#OBJFILES := /tokenizer/tokenizer.c.o /gui/terminal/render.c.o
+
+all: $(CFILES) $(CPPFILES)
+
+	$(CC) $(CFLAGS) -lncurses -c src/$(CFILES) src/$(HFILES) -o build/$(CFILES).o
+	$(CXX) $(CFLAGS) src/$(CPPFILES) src/$(HPPFILES) build/$(OBJFILES) -o build/calc
+
+clean:
+	rm -rf build
+	rm -r $(OBJFILES)

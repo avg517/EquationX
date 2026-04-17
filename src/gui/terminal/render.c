@@ -1,8 +1,9 @@
+
 #include <ncurses.h>
 //#include <math.h>
 #include <stdlib.h>
 #include "terminal-constants.h"
-
+#include "render.h"
 
 /*unsigned char* generate_graphics(){
     unsigned char* graphics =(unsigned char*) calloc(256,sizeof(char));
@@ -77,14 +78,14 @@ char** render_line(int x1,int y1,int x2,int y2){//don't use this function to ren
 
 }
 
-char** plotLine(int x0, int y0, int x1, int y1)//not made by me,but it's modified to work for this program, it's from this guy's site: https://zingl.github.io/bresenham.html
+int** plotLine(int x0, int y0, int x1, int y1)//not made by me,but it's modified to work for this program, it's from this guy's site: https://zingl.github.io/bresenham.html
 {
     int dx =  abs(x1-x0), sx = x0<x1 ? 1 : -1;
     int dy = -abs(y1-y0), sy = y0<y1 ? 1 : -1; 
     int err = dx+dy, e2; /* error value e_xy */
-    char** pixels =(char**) calloc(2,sizeof(char));
-    pixels[0]=(char*) calloc((2+200),sizeof(char));//the first vector stores x value// but in the first position it will store the size of the vector
-    pixels[1]=(char*) calloc((2+200),sizeof(char));//the second one stores y value
+    int** pixels =(int**) calloc(2,sizeof(int));
+    pixels[0]=(int*) calloc((2+200),sizeof(int));//the first vector stores x value// but in the first position it will store the size of the vector
+    pixels[1]=(int*) calloc((2+200),sizeof(int));//the second one stores y value
 
     //found the error why it give malloc corrupted top size: when using dy with malloc it gives the error, probably from weird shannanigans happening(like dy being -1)
 
@@ -106,12 +107,12 @@ char** plotLine(int x0, int y0, int x1, int y1)//not made by me,but it's modifie
 
 
 
-bool render_sprite(int x,int y,char** sprite,char** buffer){//this function renders the line from the render_line function,but the previous one only computes the pixels you need to "light up",this one puts it on the video buffer at some coordonates you specify
+bool render_sprite(int x,int y,int** sprite,char** buffer){//this function renders the line from the render_line function,but the previous one only computes the pixels you need to "light up",this one puts it on the video buffer at some coordonates you specify
     for(int i=1;i<=sprite[0][0];i++){
         int x1=sprite[0][i]+x;
         int y1=sprite[1][i]+y;
         if(x1>=COLS || y1 >= LINES){
-            return false;//returns false when the line is outside of the screen(but it doesn't mean it should stop the program,only to not continue rendering the line)
+            //return false;//returns false when the line is outside of the screen(but it doesn't mean it should stop the program,only to not continue rendering the line)
         }else{
             buffer[x1][y1]=LINE;
         }
@@ -126,7 +127,7 @@ int*** generate_equation_sprite(double** graph){
     for(int i=0;graph[1][i]!='\0';i++){
         size++;
     }
-    int*** points=(int***) calloc(size,sizeof(int));
+    int*** points=(int***) malloc((1+size)*sizeof(int));
 
     for(int i=1;graph[1][i+1]!='\0';i++){
         points[i]=plotLine(graph[0][i],graph[1][i],graph[0][i+1],graph[1][i+1]);
@@ -141,7 +142,7 @@ void render_equation(int x, int y,int*** points,char** buffer){//this function r
             int x=points[j][0][i];
             int y=points[j][1][i];
             if(x>=COL || y >= LIN){
-                return; //false;//returns false when the line is outside of the screen(but it doesn't mean it should stop the program,only to not continue rendering the line)
+                //return; //false;//returns false when the line is outside of the screen(but it doesn't mean it should stop the program,only to not continue rendering the line)
             }else{
                 buffer[x][y]=LINE;
             }

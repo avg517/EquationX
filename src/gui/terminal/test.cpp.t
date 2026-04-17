@@ -10,8 +10,10 @@ int main(){
     char** buffer = init_buffer();
     //empty_buffer(buffer); //this function will be repaired later
     //char** sprite = render_line(5,5,6,70); 
-    char** sprite = plotLine(5,5,115,125);
+    int** sprite = plotLine(5,5,115,125);
     render_sprite(2,4,sprite,buffer);
+    int** sprite2 = plotLine(115,125,185,5);
+    render_sprite(15,5,sprite2,buffer);
     //unsigned char* graphics = nullptr;
     //graphics=generate_graphics();
     
