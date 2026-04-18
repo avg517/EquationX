@@ -156,34 +156,14 @@ void render_equation(int x, int y,int*** points,char** buffer){//this function r
 
 void render_buffer(char** buffer){//the buffer needs to be the size of the window for this to work
     //a solution would be to make a very large buffer (for a terminal screen,but in memory it won't be that big)
-
-    //refresh();
-    //void getmaxyx(WINDOW *win, int y, int x); //this function gets the maximum size of the terminal
-    //also,this variables are initiliazed by ncurses after initializing the screen: COLS, LINES
-
-    //buffer[2][3]='#';
     move(0,0);
     for(int y=0;y<LINES;y++){
-        for(int x=0;x<COLS;x++){
-            //mvaddch(y,x,buffer[x][y]);
-            //addch(graphics[buffer[x][y]]);
-            
+        for(int x=0;x<COLS;x++){           
             if(buffer[x][y]==LINE){
                 addch(LINE);
             }else{
                 addch(' ');
-            }
-            
-            //addch(buffer[x][y]);//this is the one that kinda worked
-            
-            
-            //addch(graphics[34]);
-            //addch('#');
-            //if(x==LINES-1){addch('s');}
-            //if(x==COL-1){
-                //addch('O');
-                
-            //}
+            }            
         }
         move(y+1,0);
     }

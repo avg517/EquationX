@@ -115,10 +115,6 @@ void compute_graph(double** graph,int flag,double number){//flag is the operatio
                 graph[1][i]*=number;
             }
             break;
-        /*case modsign://don't know who would use modsign,but I will added just in case
-            for(int i=0;graph[0][i]!='\0';i++){
-                graph[1][i]%=number;
-            }modsign doesn't work for double*/
     }
 }
 
