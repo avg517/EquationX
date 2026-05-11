@@ -1,9 +1,9 @@
 # EquationX
 # Compiling from source
-##Prerequisites
+## Prerequisites
 -gnu make
 -gcc
-##Cloning the repository
+## Cloning the repository
 First type this in your command line:
 ```bash
 git clone https://github.com/avg517/EquationX.git
