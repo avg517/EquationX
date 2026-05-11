@@ -1,4 +1,5 @@
 //the ifndef is for the libary to not be included twice
+#pragma once
 #ifndef INCLUD_PARSEVARS
 #define INCLUD_PARSEVARS
 

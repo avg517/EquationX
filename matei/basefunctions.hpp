@@ -1,3 +1,4 @@
+#pragma once
 #ifndef BASE_FUNCTIONS
 #define BASE_FUNCTIONS
 

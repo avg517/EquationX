@@ -1,10 +1,13 @@
+
 //#include <stdlib.h>
-//#include <stdio.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <ncurses.h>
 //#include <deque>
 //#include <pair>
 #include <cstdlib>
 #include <math.h>
-//#include "graph_generator.hpp"
+#include "graph_generator.hpp"
 #include "../tokenizer/tokens.h"
 
 //we will make a function that generates every solution that is an integer to every equation degree
@@ -96,7 +99,7 @@ void initialize_graph(double** graph,double rate,double lower_bound,double upper
 }
 
 //this function takes a graph(that might be empty or not) and applies a given operation to it(for example +4)
-double** compute_graph(double** graph,int flag,double number){//flag is the operation flag described as in the file tokens.h  
+void compute_graph(double** graph,int flag,double number){//flag is the operation flag described as in the file tokens.h  
     switch(flag){
         case minussign:
             number= (-1)*number;//makes it so number is negative
@@ -112,10 +115,44 @@ double** compute_graph(double** graph,int flag,double number){//flag is the oper
                 graph[1][i]*=number;
             }
             break;
-        case modsign://don't know who would use modsign,but I will added just in case
-            for(int i=0;graph[0][i]!='\0';i++){
-                graph[1][i]%=number;
-            }
     }
+}
+
+double** create_graph(){//it is like in vim.In this mode you enter commands(and equations in this case to compute)
+    double lower_bound;
+    scanw("%lf", &lower_bound);
+    refresh();
+    double upper_bound;
+    scanw("%lf", &upper_bound);
+    refresh();
+    double** graph = generate_empty_graph_double(lower_bound,upper_bound);
+    double rate;
+    scanw("%lf", &rate);
+    refresh();
+    initialize_graph(graph,rate,lower_bound,upper_bound);
     return graph;
+
+}
+
+int get_flag(){
+    char input =getch();
+    switch(input){
+        case '-':
+            return minussign;
+        case '+':
+            return addsign;
+        case '*':
+            return multiplysign;
+        case '/':
+            return dividesign;
+    }
+    return -1;//it means error
+}
+
+void add_to_graph(double** graph){
+    int flag=get_flag();
+    int number;
+    scanw("%d", &number);
+    refresh();
+    compute_graph(graph,flag,number);
 }
