@@ -35,7 +35,7 @@ bool program_on=true;
 std::ifstream fin;
 
 
-
+/*
 void handle_input(char** buffer,double** graph){
     char input = getch();
     if(input=='q'){program_on=false;}
@@ -70,7 +70,7 @@ void render(){//the function renders the graph
     free(graph);
     //free(graphics);
 }
-
+*/
 void read_file(char** buffer){
     double x0,x1,y0,y1;
     while(fin>>x0>>y0>>x1>>y1){
