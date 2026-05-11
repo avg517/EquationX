@@ -32,10 +32,10 @@ bool program_on=true;
 }*/
 
 
-std::ifstream fin("equation.eq");
+std::ifstream fin;
 
 
-
+/*
 void handle_input(char** buffer,double** graph){
     char input = getch();
     if(input=='q'){program_on=false;}
@@ -70,20 +70,24 @@ void render(){//the function renders the graph
     free(graph);
     //free(graphics);
 }
-
+*/
 void read_file(char** buffer){
     double x0,x1,y0,y1;
-    fin>>x0>>y0>>x1>>y1;
-    int** sprite = plotLine(x0,y0,x1,y1);
-    render_sprite(1,1,sprite,buffer);
-    std::free(sprite);
+    while(fin>>x0>>y0>>x1>>y1){
+    	int** sprite = plotLine(x0,y0,x1,y1);
+    	render_sprite(1,1,sprite,buffer); 
+    	std::free(sprite);
+    }
 }
+
+
 
 void handle_input2(){
     char input = getch();
     if(input=='q'){program_on=false;}
 }
 
+//curently this is the function we use to render
 void render2(){
     init_ncurses();
     double** graph=NULL;
@@ -97,6 +101,7 @@ void render2(){
     //std::cout<<LINES<<" "<<COLS;
     stop_ncurses();
 
+
     std::free(buffer);
     //std::free(input_command);
     free(graph);
@@ -106,6 +111,8 @@ void render2(){
 
 int main(int argc, char *argv[]){
     //render();
+    //std::ifstream fin(argv[1]);
+    fin.open(argv[1]);
     render2();
     
     
