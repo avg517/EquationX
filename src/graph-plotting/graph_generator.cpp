@@ -1,6 +1,6 @@
 
 //#include <stdlib.h>
-#include <stdio.h>
+//#include <stdio.h>
 #include <stdlib.h>
 #include <ncurses.h>
 //#include <deque>
@@ -46,45 +46,6 @@ int** calculate_first_degree(int lower_bound,int upper_bound,int a,int b){//the 
     return graph;
 }
 
-
-//this is for the second degree equation
-//the function will be in the same manner as the previous one,but it solves second degree functions 
-
-//second degree equation are of the form: https://en.wikipedia.org/wiki/Quadratic_equation
-//I can't display the form here the form efficiently,but you can take a look at the wikipedia page
-
-//TODO:make the second degree equation solver actually work
-
-/*
-double** solve_second_degree_equation(double a,double b,double c,double y){//y is what it needs to equal to(by that i mean y=[quadratic equation])
-    int solution[2];
-    double delta=b*b-4*a*c//calculates the delta
-    soltion[0]=((-b)-sqrt(delta))/(2*a);//this is x1
-    solution[1]=((-b)+sqrt(delta))/(2*a);//and this is x2
-
-}
-
-double** calculate_second_degree(double lower_bound,double upper_bound,double a,double b,double c,double rate){//rate describes the rate at which x increases. Smaller rate means higher precision
-    double** graph = generate_empty_graph_double(lower_bound,upper_bound*2);//we need to have an empty graph that is 2 times bigger than the the upper_bound-lower_bound because the solution is also negative
-
-    for(int x=lower_bound;x<=upper_bound;x++){
-        int solution[2];
-        double delta=b*b-4*a*c//calculates the delta
-        soltion[0]=((-b)-sqrt(delta))/(2*a);//this is x1
-        solution[1]=((-b)+sqrt(delta))/(2*a);//and this is x2
-        
-
-
-        
-    }
-
-}*/
-
-//this function puts every possible x into the graph vector which increases at a given rate
-
-
-
-//for example: it can fill a graph vector with numbers starting at 5 and ending at 8 at a rate of 0.5 which will result in the following vector
 void initialize_graph(double** graph,double rate,double lower_bound,double upper_bound){
     double x=0;//x*rate + lower_bound gives the current number at which it is
     int i;
@@ -156,3 +117,48 @@ void add_to_graph(double** graph){
     refresh();
     compute_graph(graph,flag,number);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+//this is for the second degree equation
+//the function will be in the same manner as the previous one,but it solves second degree functions 
+
+//second degree equation are of the form: https://en.wikipedia.org/wiki/Quadratic_equation
+//I can't display the form here the form efficiently,but you can take a look at the wikipedia page
+
+//TODO:make the second degree equation solver actually work
+
+/*
+double** solve_second_degree_equation(double a,double b,double c,double y){//y is what it needs to equal to(by that i mean y=[quadratic equation])
+    int solution[2];
+    double delta=b*b-4*a*c//calculates the delta
+    soltion[0]=((-b)-sqrt(delta))/(2*a);//this is x1
+    solution[1]=((-b)+sqrt(delta))/(2*a);//and this is x2
+
+}
+
+double** calculate_second_degree(double lower_bound,double upper_bound,double a,double b,double c,double rate){//rate describes the rate at which x increases. Smaller rate means higher precision
+    double** graph = generate_empty_graph_double(lower_bound,upper_bound*2);//we need to have an empty graph that is 2 times bigger than the the upper_bound-lower_bound because the solution is also negative
+
+    for(int x=lower_bound;x<=upper_bound;x++){
+        int solution[2];
+        double delta=b*b-4*a*c//calculates the delta
+        soltion[0]=((-b)-sqrt(delta))/(2*a);//this is x1
+        solution[1]=((-b)+sqrt(delta))/(2*a);//and this is x2
+        
+
+
+        
+    }
+
+}*/
