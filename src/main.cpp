@@ -8,7 +8,7 @@
 //#include "simplecalculator.hpp"
 #include "./graph-plotting/graph_generator.hpp"
 #include "./gui/terminal/render.h"
-#include "./tokenizer/tokens.h"
+//#include "./tokenizer/tokens.h"
 #include <ncurses.h>
 #include <stdio.h>
 #include <stdlib.h>
